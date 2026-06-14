@@ -445,54 +445,53 @@ function draw() {
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
 
-    // base aura glow
-    const glow = ctx.createRadialGradient(cx, cy, 10, cx, cy, 140);
-    glow.addColorStop(0, "rgba(0,255,255,0.25)");
-    glow.addColorStop(0.3, "rgba(255,0,200,0.12)");
-    glow.addColorStop(1, "rgba(0,0,0,0)");
+    // 🌌 background aura fog (NOT spherical structure)
+    const bg = ctx.createRadialGradient(cx, cy, 10, cx, cy, 160);
+    bg.addColorStop(0, "rgba(255,0,200,0.18)");
+    bg.addColorStop(0.4, "rgba(0,200,255,0.10)");
+    bg.addColorStop(1, "rgba(0,0,0,0)");
 
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 140, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const baseRadius = 35;
-    const spikes = 64; // keep low = sharp anime look
+    const spikes = 48; // keep low = sharp anime energy
 
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#00e5ff";
     ctx.shadowBlur = 25;
     ctx.shadowColor = "#00e5ff";
+    ctx.strokeStyle = "#00e5ff";
 
     ctx.beginPath();
 
     for (let i = 0; i < spikes; i++) {
-        const angle = (i / spikes) * Math.PI * 2;
 
         const index = Math.floor((i / spikes) * dataArray.length);
-        const v = dataArray[index] / 128.0;
+        const v = dataArray[index] / 255;
 
-        // 🔥 make it “energy spike”, not smooth wave
-        const energy = Math.max(0, v - 0.9) * 80;
+        // 🔥 aggressive energy (removes “roundness”)
+        const energy = Math.pow(v, 3) * 120;
 
-        const r = baseRadius + energy;
+        // NOT circular positioning anymore
+        const x = (i / spikes) * canvas.width;
 
-        const x = cx + Math.cos(angle) * r;
-        const y = cy + Math.sin(angle) * r;
+        // vertical eruption spikes (key change)
+        const yTop = cy - energy;
+        const yBottom = cy + energy;
 
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        ctx.moveTo(x, cy);
+        ctx.lineTo(x, yTop);
+        ctx.moveTo(x, cy);
+        ctx.lineTo(x, yBottom);
     }
 
-    ctx.closePath();
     ctx.stroke();
 
-    // core pulse
+    // 💥 core explosion pulse (non-spherical, pure impact)
     const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-    const pulse = (avg / 128) * 18;
+    const pulse = (avg / 255) * 60;
 
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,0,180,0.45)";
+    ctx.fillStyle = "rgba(255,0,180,0.5)";
     ctx.shadowBlur = 40;
     ctx.shadowColor = "#ff00aa";
     ctx.arc(cx, cy, 10 + pulse, 0, Math.PI * 2);
