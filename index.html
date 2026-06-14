@@ -468,14 +468,21 @@ function draw() {
     for (let i = 0; i < bars; i++) {
 
         const value = dataArray[i];
-        const height = (value / 255) * 25;
+        const height = (value / 255) * 30;
 
-        ctx.fillRect(
-            x,
-            centerY - height,
-            barWidth,
-            height
-        );
+ctx.fillRect(
+    x,
+    centerY - height,
+    barWidth,
+    height
+);
+
+ctx.fillRect(
+    x,
+    centerY + 1,
+    barWidth,
+    height
+);
 
         ctx.fillRect(
             x,
