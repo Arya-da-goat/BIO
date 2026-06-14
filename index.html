@@ -476,19 +476,8 @@ function draw() {
         const rightX = centerX + offset + 1;
 
         // Left side
-        ctx.fillRect(
-    centerX - offset - barWidth,
-    centerY - height / 2,
-    barWidth,
-    height
-);
-
-ctx.fillRect(
-    centerX + offset,
-    centerY - height / 2,
-    barWidth,
-    height
-);
+        ctx.fillRect(leftX, centerY - height / 2, barWidth, height);
+ctx.fillRect(rightX, centerY - height / 2, barWidth, height);
     }
 }
 
