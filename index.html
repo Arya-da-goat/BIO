@@ -443,20 +443,23 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const centerY = canvas.height / 2;
-    const bars = 64;
-    const barWidth = 3;
+    const bars = 70;
+    const barWidth = 2;
     const gap = 2;
 
     const gradient = ctx.createLinearGradient(
-        0, 0,
-        canvas.width, 0
+        0,
+        0,
+        canvas.width,
+        0
     );
 
     gradient.addColorStop(0, "#00bfff");
-    gradient.addColorStop(1, "#4d7cff");
+    gradient.addColorStop(0.5, "#7a00ff");
+    gradient.addColorStop(1, "#ff0088");
 
     ctx.fillStyle = gradient;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 15;
     ctx.shadowColor = "#00bfff";
 
     let x = 0;
@@ -464,9 +467,8 @@ function draw() {
     for (let i = 0; i < bars; i++) {
 
         const value = dataArray[i];
-        const height = (value / 255) * 40;
+        const height = (value / 255) * 60;
 
-        // Top bar
         ctx.fillRect(
             x,
             centerY - height,
@@ -474,7 +476,6 @@ function draw() {
             height
         );
 
-        // Bottom mirrored bar
         ctx.fillRect(
             x,
             centerY,
@@ -484,10 +485,9 @@ function draw() {
 
         x += barWidth + gap;
     }
-    }
-    
-draw();    
+}
 
+draw();
 document.getElementById("enter")
 .style.opacity="0";
 
