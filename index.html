@@ -458,27 +458,30 @@ function draw() {
 
     ctx.beginPath();
 
-    const sliceWidth = canvas.width / bufferLength;
-    let x = 0;
+ctx.shadowBlur = 15;
+ctx.shadowColor = "#00bfff";
 
-    // 🔥 KEY CHANGE: skip every 3–4 samples for smooth “pulse” look
-    const step = 4;
+const step = 12;
+const midY = canvas.height / 2;
 
-    for (let i = 0; i < bufferLength; i += step) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * canvas.height) / 2;
+let x = 0;
 
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
+for (let i = 0; i < bufferLength; i += step) {
 
-        x += sliceWidth * step;
+    const v = dataArray[i] / 128.0;
+
+    const y = midY + (v - 1) * 40;
+
+    if (i === 0) {
+        ctx.moveTo(x, y);
+    } else {
+        ctx.lineTo(x, y);
     }
 
-    ctx.stroke();
+    x += canvas.width / (bufferLength / step);
 }
+
+ctx.stroke();
     
 
 draw();    
