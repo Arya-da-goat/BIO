@@ -444,39 +444,42 @@ function draw() {
 
     const midY = canvas.height / 2;
 
-    // 🌈 glow base line
-    ctx.beginPath();
+    const step = 2; // 🔥 very high detail sampling (important)
+
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.25)";
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "#00ffff";
+    ctx.lineJoin = "miter";   // 🔥 sharp corners (NOT round)
+    ctx.lineCap = "butt";     // 🔥 removes soft ends
+
+    ctx.shadowBlur = 0;       // ❌ remove glow blur (blur = softness killer)
+    
+    // ===== MAIN CRISP CORE =====
+    ctx.beginPath();
+    ctx.strokeStyle = "#00e5ff";
 
     let x = 0;
-    const step = 3;
 
     for (let i = 0; i < bufferLength; i += step) {
 
         const v = dataArray[i] / 128.0;
 
-        // ⚡ sharp vertical energy (NOT circular)
-        const spike = (v - 1) * 60;
+        // 🔥 HARD CLAMPED SPIKE (no smooth curves)
+        let y = midY + (v - 1) * 90;
 
-        const y = midY + spike;
+        // 🔥 quantize (THIS is what makes it "sharp digital anime")
+        y = Math.round(y / 4) * 4;
+
+        x = (i / bufferLength) * canvas.width;
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
-
-        x += canvas.width / (bufferLength / step);
     }
 
     ctx.stroke();
 
-    // 🔥 second aggressive neon layer (thicker “anime slash” look)
+    // ===== SECOND ENERGY EDGE LAYER =====
     ctx.beginPath();
-    ctx.lineWidth = 3;
     ctx.strokeStyle = "#ff00aa";
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "#ff00aa";
+    ctx.lineWidth = 1;
 
     x = 0;
 
@@ -484,13 +487,15 @@ function draw() {
 
         const v = dataArray[i] / 128.0;
 
-        const spike = (v - 1) * 80; // stronger layer
-        const y = midY + spike;
+        let y = midY + (v - 1) * 110;
+
+        // 🔥 even harsher quantization
+        y = Math.round(y / 6) * 6;
+
+        x = (i / bufferLength) * canvas.width;
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
-
-        x += canvas.width / (bufferLength / step);
     }
 
     ctx.stroke();
