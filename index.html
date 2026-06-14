@@ -451,7 +451,10 @@ function draw() {
 
     ctx.strokeStyle = gradient;
 
-    ctx.beginPath();
+ctx.beginPath();
+
+ctx.shadowBlur = 15;
+ctx.shadowColor = "#00bfff";
 
     const sliceWidth = canvas.width / bufferLength;
     let x = 0;
