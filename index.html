@@ -427,7 +427,7 @@ const analyser = audioCtx.createAnalyser();
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 
-analyser.fftSize = 512;
+analyser.fftSize = 2048;
 
 const canvas = document.getElementById("visualizer");
 const ctx = canvas.getContext("2d");
@@ -442,46 +442,75 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    const radius = 30;
+
+    // 🌈 background aura glow
+    const gradient = ctx.createRadialGradient(
+        centerX, centerY, 10,
+        centerX, centerY, 120
+    );
+
+    gradient.addColorStop(0, "rgba(0,255,255,0.25)");
+    gradient.addColorStop(0.4, "rgba(255,0,200,0.15)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 120, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ⚡ main core ring
     ctx.lineWidth = 3;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-
-    ctx.shadowBlur = 18;
-    ctx.shadowColor = "#00bfff";
-
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, "#ff0088");
-    gradient.addColorStop(0.5, "#00bfff");
-    gradient.addColorStop(1, "#00ff88");
-
-    ctx.strokeStyle = gradient;
+    ctx.strokeStyle = "#00e5ff";
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#00e5ff";
 
     ctx.beginPath();
 
-ctx.shadowBlur = 15;
-ctx.shadowColor = "#00bfff";
+    const slice = (Math.PI * 2) / bufferLength;
 
-const step = 12;
-const midY = canvas.height / 2;
+    let angle = 0;
 
-let x = 0;
+    for (let i = 0; i < bufferLength; i += 6) {
 
-for (let i = 0; i < bufferLength; i += step) {
+        const v = dataArray[i] / 128.0;
 
-    const v = dataArray[i] / 128.0;
+        // 🔥 energy spike
+        const spike = (v - 1) * 25;
 
-    const y = midY + (v - 1) * 40;
+        const r = radius + spike;
 
-    if (i === 0) {
-        ctx.moveTo(x, y);
-    } else {
-        ctx.lineTo(x, y);
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+
+        angle += slice * 6;
     }
 
-    x += canvas.width / (bufferLength / step);
-}
+    ctx.closePath();
+    ctx.stroke();
 
-ctx.stroke();
+    // 💥 inner pulse core
+    const avg =
+        dataArray.reduce((a, b) => a + b, 0) / bufferLength;
+
+    const pulse = (avg / 128) * 20;
+
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,0,150,0.4)";
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = "#ff00aa";
+    ctx.arc(centerX, centerY, 12 + pulse, 0, Math.PI * 2);
+    ctx.fill();
+}
     
 
 draw();    
