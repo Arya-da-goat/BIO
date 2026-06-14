@@ -443,6 +443,8 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
 
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
     gradient.addColorStop(0, "#ff0088");
@@ -451,15 +453,15 @@ function draw() {
 
     ctx.strokeStyle = gradient;
 
-ctx.beginPath();
+    ctx.beginPath();
 
-ctx.shadowBlur = 15;
-ctx.shadowColor = "#00bfff";
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "#00bfff";
 
-    const sliceWidth = canvas.width / bufferLength;
     let x = 0;
+    const step = 8; // 🔥 THIS makes it clean
 
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < bufferLength; i += step) {
         const v = dataArray[i] / 128.0;
         const y = (v * canvas.height) / 2;
 
@@ -469,11 +471,11 @@ ctx.shadowColor = "#00bfff";
             ctx.lineTo(x, y);
         }
 
-        x += sliceWidth;
+        x += canvas.width / (bufferLength / step);
     }
 
     ctx.stroke();
-    }
+}
 
 draw();    
 
