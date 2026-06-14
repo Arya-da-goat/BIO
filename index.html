@@ -442,74 +442,58 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
+    const midY = canvas.height / 2;
 
-    const radius = 30;
-
-    // 🌈 background aura glow
-    const gradient = ctx.createRadialGradient(
-        centerX, centerY, 10,
-        centerX, centerY, 120
-    );
-
-    gradient.addColorStop(0, "rgba(0,255,255,0.25)");
-    gradient.addColorStop(0.4, "rgba(255,0,200,0.15)");
-    gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-    ctx.fillStyle = gradient;
+    // 🌈 glow base line
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 120, 0, Math.PI * 2);
-    ctx.fill();
-
-    // ⚡ main core ring
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#00e5ff";
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(0, 255, 255, 0.25)";
     ctx.shadowBlur = 20;
-    ctx.shadowColor = "#00e5ff";
+    ctx.shadowColor = "#00ffff";
 
-    ctx.beginPath();
+    let x = 0;
+    const step = 3;
 
-    const slice = (Math.PI * 2) / bufferLength;
-
-    let angle = 0;
-
-    for (let i = 0; i < bufferLength; i += 6) {
+    for (let i = 0; i < bufferLength; i += step) {
 
         const v = dataArray[i] / 128.0;
 
-        // 🔥 energy spike
-        const spike = (v - 1) * 25;
+        // ⚡ sharp vertical energy (NOT circular)
+        const spike = (v - 1) * 60;
 
-        const r = radius + spike;
+        const y = midY + spike;
 
-        const x = centerX + Math.cos(angle) * r;
-        const y = centerY + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
 
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-
-        angle += slice * 6;
+        x += canvas.width / (bufferLength / step);
     }
 
-    ctx.closePath();
     ctx.stroke();
 
-    // 💥 inner pulse core
-    const avg =
-        dataArray.reduce((a, b) => a + b, 0) / bufferLength;
-
-    const pulse = (avg / 128) * 20;
-
+    // 🔥 second aggressive neon layer (thicker “anime slash” look)
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,0,150,0.4)";
-    ctx.shadowBlur = 30;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#ff00aa";
+    ctx.shadowBlur = 25;
     ctx.shadowColor = "#ff00aa";
-    ctx.arc(centerX, centerY, 12 + pulse, 0, Math.PI * 2);
-    ctx.fill();
+
+    x = 0;
+
+    for (let i = 0; i < bufferLength; i += step) {
+
+        const v = dataArray[i] / 128.0;
+
+        const spike = (v - 1) * 80; // stronger layer
+        const y = midY + spike;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+
+        x += canvas.width / (bufferLength / step);
+    }
+
+    ctx.stroke();
 }
     
 
