@@ -442,63 +442,61 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const midY = canvas.height / 2;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
 
-    const step = 2; // 🔥 very high detail sampling (important)
+    // base aura glow
+    const glow = ctx.createRadialGradient(cx, cy, 10, cx, cy, 140);
+    glow.addColorStop(0, "rgba(0,255,255,0.25)");
+    glow.addColorStop(0.3, "rgba(255,0,200,0.12)");
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 140, 0, Math.PI * 2);
+    ctx.fill();
+
+    const baseRadius = 35;
+    const spikes = 64; // keep low = sharp anime look
 
     ctx.lineWidth = 2;
-    ctx.lineJoin = "miter";   // 🔥 sharp corners (NOT round)
-    ctx.lineCap = "butt";     // 🔥 removes soft ends
-
-    ctx.shadowBlur = 0;       // ❌ remove glow blur (blur = softness killer)
-    
-    // ===== MAIN CRISP CORE =====
-    ctx.beginPath();
     ctx.strokeStyle = "#00e5ff";
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = "#00e5ff";
 
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i += step) {
-
-        const v = dataArray[i] / 128.0;
-
-        // 🔥 HARD CLAMPED SPIKE (no smooth curves)
-        let y = midY + (v - 1) * 90;
-
-        // 🔥 quantize (THIS is what makes it "sharp digital anime")
-        y = Math.round(y / 4) * 4;
-
-        x = (i / bufferLength) * canvas.width;
-
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    }
-
-    ctx.stroke();
-
-    // ===== SECOND ENERGY EDGE LAYER =====
     ctx.beginPath();
-    ctx.strokeStyle = "#ff00aa";
-    ctx.lineWidth = 1;
 
-    x = 0;
+    for (let i = 0; i < spikes; i++) {
+        const angle = (i / spikes) * Math.PI * 2;
 
-    for (let i = 0; i < bufferLength; i += step) {
+        const index = Math.floor((i / spikes) * dataArray.length);
+        const v = dataArray[index] / 128.0;
 
-        const v = dataArray[i] / 128.0;
+        // 🔥 make it “energy spike”, not smooth wave
+        const energy = Math.max(0, v - 0.9) * 80;
 
-        let y = midY + (v - 1) * 110;
+        const r = baseRadius + energy;
 
-        // 🔥 even harsher quantization
-        y = Math.round(y / 6) * 6;
-
-        x = (i / bufferLength) * canvas.width;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
     }
 
+    ctx.closePath();
     ctx.stroke();
+
+    // core pulse
+    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+    const pulse = (avg / 128) * 18;
+
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,0,180,0.45)";
+    ctx.shadowBlur = 40;
+    ctx.shadowColor = "#ff00aa";
+    ctx.arc(cx, cy, 10 + pulse, 0, Math.PI * 2);
+    ctx.fill();
 }
     
 
