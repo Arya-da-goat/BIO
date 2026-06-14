@@ -438,54 +438,52 @@ const dataArray = new Uint8Array(bufferLength);
 function draw() {
     requestAnimationFrame(draw);
 
-    analyser.getByteTimeDomainData(dataArray);
+    analyser.getByteFrequencyData(dataArray);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const w = canvas.width;
-    const h = canvas.height;
-    const midY = h / 2;
+    const centerY = canvas.height / 2;
+    const bars = 64;
+    const barWidth = 3;
+    const gap = 2;
 
-    // ✨ soft anime aura glow (background only)
-    const glow = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, 160);
-    glow.addColorStop(0, "rgba(0,255,255,0.10)");
-    glow.addColorStop(0.4, "rgba(255,0,200,0.06)");
-    glow.addColorStop(1, "transparent");
+    const gradient = ctx.createLinearGradient(
+        0, 0,
+        canvas.width, 0
+    );
 
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, w, h);
+    gradient.addColorStop(0, "#00bfff");
+    gradient.addColorStop(1, "#4d7cff");
 
-    // ⚡ energy waveform line (main effect)
-    ctx.lineWidth = 2;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-
-    ctx.shadowBlur = 16;
-    ctx.shadowColor = "#00e5ff";
-
-    const gradient = ctx.createLinearGradient(0, 0, w, 0);
-    gradient.addColorStop(0, "#00e5ff");
-    gradient.addColorStop(0.5, "#ff00d4");
-    gradient.addColorStop(1, "#00ff88");
-
-    ctx.strokeStyle = gradient;
-
-    const step = 6;         // smaller = smoother, higher = sharper
-    const amp = 55;         // energy height (THIS is your “anime pulse” feel)
-
-    ctx.beginPath();
+    ctx.fillStyle = gradient;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = "#00bfff";
 
     let x = 0;
 
-    for (let i = 0; i < bufferLength; i += step) {
+    for (let i = 0; i < bars; i++) {
 
-        const v = dataArray[i] / 128 - 1;   // -1 to +1
-        const y = midY + v * amp;
+        const value = dataArray[i];
+        const height = (value / 255) * 40;
 
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        // Top bar
+        ctx.fillRect(
+            x,
+            centerY - height,
+            barWidth,
+            height
+        );
 
-        x += w / (bufferLength / step);
+        // Bottom mirrored bar
+        ctx.fillRect(
+            x,
+            centerY,
+            barWidth,
+            height
+        );
+
+        x += barWidth + gap;
+    }
     }
 
     ctx.stroke();
