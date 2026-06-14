@@ -472,8 +472,8 @@ function draw() {
 
         const offset = i * (barWidth + gap);
 
-        const leftX = centerX - offset - barWidth;
-        const rightX = centerX + offset;
+        const leftX = centerX - offset - barWidth - 1;
+        const rightX = centerX + offset + 1;
 
         // Left side
         ctx.fillRect(
