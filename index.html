@@ -427,12 +427,12 @@ const analyser = audioCtx.createAnalyser();
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 
-analyser.fftSize = 2048;
+analyser.fftSize = 512;
 
 const canvas = document.getElementById("visualizer");
 const ctx = canvas.getContext("2d");
 
-const bufferLength = analyser.fftSize;
+const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
 
 function draw() {
