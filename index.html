@@ -476,12 +476,19 @@ function draw() {
         const rightX = centerX + offset;
 
         // Left side
-        ctx.fillRect(leftX, centerY - height, barWidth, height);
-        ctx.fillRect(leftX, centerY, barWidth, height);
+        ctx.fillRect(
+    centerX - offset - barWidth,
+    centerY - height,
+    barWidth,
+    height * 2
+);
 
-        // Right side (same height = perfect mirror)
-        ctx.fillRect(rightX, centerY - height, barWidth, height);
-        ctx.fillRect(rightX, centerY, barWidth, height);
+ctx.fillRect(
+    centerX + offset,
+    centerY - height,
+    barWidth,
+    height * 2
+);
     }
 }
 
