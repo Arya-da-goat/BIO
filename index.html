@@ -478,19 +478,17 @@ function draw() {
         // Left side
         ctx.fillRect(
     centerX - offset - barWidth,
-    centerY - height,
+    centerY - height / 2,
     barWidth,
-    height * 2
+    height
 );
 
 ctx.fillRect(
     centerX + offset,
-    centerY - height,
+    centerY - height / 2,
     barWidth,
-    height * 2
+    height
 );
-    }
-}
 
 draw();
 document.getElementById("enter")
