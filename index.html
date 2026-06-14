@@ -485,21 +485,7 @@ function draw() {
         x += barWidth + gap;
     }
     }
-
-    ctx.stroke();
-
-    // 💥 tiny “core flicker” (NOT a sphere, just a pulse point)
-    const avg = dataArray.reduce((a,b)=>a+b,0) / bufferLength;
-    const pulse = (avg / 255) * 10;
-
-    ctx.beginPath();
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "#ff00aa";
-    ctx.fillStyle = "rgba(255,0,150,0.35)";
-    ctx.fillRect(w/2 - 1, midY - pulse/2, 2, pulse);
-}
     
-
 draw();    
 
 document.getElementById("enter")
