@@ -442,60 +442,63 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const w = canvas.width;
+    const h = canvas.height;
+    const midY = h / 2;
 
-    // 🌌 background aura fog (NOT spherical structure)
-    const bg = ctx.createRadialGradient(cx, cy, 10, cx, cy, 160);
-    bg.addColorStop(0, "rgba(255,0,200,0.18)");
-    bg.addColorStop(0.4, "rgba(0,200,255,0.10)");
-    bg.addColorStop(1, "rgba(0,0,0,0)");
+    // ✨ soft anime aura glow (background only)
+    const glow = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, 160);
+    glow.addColorStop(0, "rgba(0,255,255,0.10)");
+    glow.addColorStop(0.4, "rgba(255,0,200,0.06)");
+    glow.addColorStop(1, "transparent");
 
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, w, h);
 
-    const spikes = 48; // keep low = sharp anime energy
-
+    // ⚡ energy waveform line (main effect)
     ctx.lineWidth = 2;
-    ctx.shadowBlur = 25;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    ctx.shadowBlur = 16;
     ctx.shadowColor = "#00e5ff";
-    ctx.strokeStyle = "#00e5ff";
+
+    const gradient = ctx.createLinearGradient(0, 0, w, 0);
+    gradient.addColorStop(0, "#00e5ff");
+    gradient.addColorStop(0.5, "#ff00d4");
+    gradient.addColorStop(1, "#00ff88");
+
+    ctx.strokeStyle = gradient;
+
+    const step = 6;         // smaller = smoother, higher = sharper
+    const amp = 55;         // energy height (THIS is your “anime pulse” feel)
 
     ctx.beginPath();
 
-    for (let i = 0; i < spikes; i++) {
+    let x = 0;
 
-        const index = Math.floor((i / spikes) * dataArray.length);
-        const v = dataArray[index] / 255;
+    for (let i = 0; i < bufferLength; i += step) {
 
-        // 🔥 aggressive energy (removes “roundness”)
-        const energy = Math.pow(v, 3) * 120;
+        const v = dataArray[i] / 128 - 1;   // -1 to +1
+        const y = midY + v * amp;
 
-        // NOT circular positioning anymore
-        const x = (i / spikes) * canvas.width;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
 
-        // vertical eruption spikes (key change)
-        const yTop = cy - energy;
-        const yBottom = cy + energy;
-
-        ctx.moveTo(x, cy);
-        ctx.lineTo(x, yTop);
-        ctx.moveTo(x, cy);
-        ctx.lineTo(x, yBottom);
+        x += w / (bufferLength / step);
     }
 
     ctx.stroke();
 
-    // 💥 core explosion pulse (non-spherical, pure impact)
-    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-    const pulse = (avg / 255) * 60;
+    // 💥 tiny “core flicker” (NOT a sphere, just a pulse point)
+    const avg = dataArray.reduce((a,b)=>a+b,0) / bufferLength;
+    const pulse = (avg / 255) * 10;
 
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,0,180,0.5)";
-    ctx.shadowBlur = 40;
+    ctx.shadowBlur = 25;
     ctx.shadowColor = "#ff00aa";
-    ctx.arc(cx, cy, 10 + pulse, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillStyle = "rgba(255,0,150,0.35)";
+    ctx.fillRect(w/2 - 1, midY - pulse/2, 2, pulse);
 }
     
 
