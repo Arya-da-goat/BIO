@@ -446,6 +446,9 @@ function draw() {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
 
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "#00bfff";
+
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
     gradient.addColorStop(0, "#ff0088");
     gradient.addColorStop(0.5, "#00bfff");
@@ -455,11 +458,11 @@ function draw() {
 
     ctx.beginPath();
 
-    ctx.shadowBlur = 18;
-    ctx.shadowColor = "#00bfff";
-
+    const sliceWidth = canvas.width / bufferLength;
     let x = 0;
-    const step = 8; // 🔥 THIS makes it clean
+
+    // 🔥 KEY CHANGE: skip every 3–4 samples for smooth “pulse” look
+    const step = 4;
 
     for (let i = 0; i < bufferLength; i += step) {
         const v = dataArray[i] / 128.0;
@@ -471,11 +474,12 @@ function draw() {
             ctx.lineTo(x, y);
         }
 
-        x += canvas.width / (bufferLength / step);
+        x += sliceWidth * step;
     }
 
     ctx.stroke();
 }
+    
 
 draw();    
 
