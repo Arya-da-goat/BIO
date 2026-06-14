@@ -465,34 +465,21 @@ function draw() {
 
     let x = 0;
 
-    for (let i = 0; i < bars; i++) {
+    const centerX = canvas.width / 2;
 
-        const value = dataArray[i];
-        const height = (value / 255) * 30;
+for (let i = 0; i < bars / 2; i++) {
 
-ctx.fillRect(
-    x,
-    centerY - height,
-    barWidth,
-    height
-);
+    const value = dataArray[i];
+    const height = (value / 255) * 60;
 
-ctx.fillRect(
-    x,
-    centerY + 1,
-    barWidth,
-    height
-);
+    const offset = i * (barWidth + gap);
 
-        ctx.fillRect(
-            x,
-            centerY,
-            barWidth,
-            height
-        );
+    ctx.fillRect(centerX - offset, centerY - height, barWidth, height);
+    ctx.fillRect(centerX - offset, centerY, barWidth, height);
 
-        x += barWidth + gap;
-    }
+    ctx.fillRect(centerX + offset, centerY - height, barWidth, height);
+    ctx.fillRect(centerX + offset, centerY, barWidth, height);
+}
 }
 
 draw();
