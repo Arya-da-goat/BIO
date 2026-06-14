@@ -443,8 +443,10 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const centerY = Math.floor(canvas.height / 2);
-    const bars = 70;
+    const centerY = canvas.height / 2;
+    const centerX = canvas.width / 2;
+
+    const bars = 35;
     const barWidth = 2;
     const gap = 2;
 
@@ -463,23 +465,24 @@ function draw() {
     ctx.shadowBlur = 15;
     ctx.shadowColor = "#00bfff";
 
-    let x = 0;
+    for (let i = 0; i < bars; i++) {
 
-    const centerX = canvas.width / 2;
+        const value = dataArray[i];
+        const height = (value / 255) * 60;
 
-for (let i = 0; i < bars / 2; i++) {
+        const offset = i * (barWidth + gap);
 
-    const value = dataArray[i];
-    const height = (value / 255) * 60;
+        const leftX = centerX - offset - barWidth;
+        const rightX = centerX + offset;
 
-    const offset = i * (barWidth + gap);
+        // Left side
+        ctx.fillRect(leftX, centerY - height, barWidth, height);
+        ctx.fillRect(leftX, centerY, barWidth, height);
 
-    ctx.fillRect(centerX - offset, centerY - height, barWidth, height);
-    ctx.fillRect(centerX - offset, centerY, barWidth, height);
-
-    ctx.fillRect(centerX + offset, centerY - height, barWidth, height);
-    ctx.fillRect(centerX + offset, centerY, barWidth, height);
-}
+        // Right side (same height = perfect mirror)
+        ctx.fillRect(rightX, centerY - height, barWidth, height);
+        ctx.fillRect(rightX, centerY, barWidth, height);
+    }
 }
 
 draw();
