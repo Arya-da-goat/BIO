@@ -432,7 +432,7 @@ analyser.fftSize = 2048;
 const canvas = document.getElementById("visualizer");
 const ctx = canvas.getContext("2d");
 
-const bufferLength = analyser.frequencyBinCount;
+const bufferLength = analyser.fftSize;
 const dataArray = new Uint8Array(bufferLength);
 
 function draw() {
