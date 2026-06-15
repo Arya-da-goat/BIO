@@ -479,6 +479,13 @@ const rightX = centerX + offset;
 ctx.fillRect(rightX, centerY - height / 2, barWidth, height);
     }
 }
+    document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        audio.pause();
+    } else {
+        audio.play();
+    }
+});
 
 draw();
 document.getElementById("enter")
