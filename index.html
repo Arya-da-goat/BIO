@@ -486,7 +486,10 @@ ctx.fillRect(rightX, centerY - height / 2, barWidth, height);
         audio.play();
     }
 });
-
+window.addEventListener("pagehide", () => {
+    audio.pause();
+});
+    
 draw();
 document.getElementById("enter")
 .style.opacity="0";
