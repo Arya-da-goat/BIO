@@ -470,10 +470,10 @@ function draw() {
         const value = dataArray[i];
         const height = 8 + (value / 255) * 40;
 
-        const offset = i * (barWidth + gap);
+        const offset = (i + 0.5) * (barWidth + gap);
 
-        const leftX = centerX - offset - barWidth - 1;
-        const rightX = centerX + offset + 2;
+const leftX = centerX - offset - barWidth;
+const rightX = centerX + offset;
 
         // Left side
         ctx.fillRect(leftX, centerY - height / 2, barWidth, height);
