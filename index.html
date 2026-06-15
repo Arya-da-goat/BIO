@@ -448,7 +448,7 @@ function draw() {
 
     const bars = 25;
     const barWidth = 2;
-    const gap = 5;
+    const gap = 4;
 
     const gradient = ctx.createLinearGradient(
         0,
@@ -473,7 +473,7 @@ function draw() {
         const offset = i * (barWidth + gap);
 
         const leftX = centerX - offset - barWidth - 1;
-        const rightX = centerX + offset + 1;
+        const rightX = centerX + offset + 2;
 
         // Left side
         ctx.fillRect(leftX, centerY - height / 2, barWidth, height);
