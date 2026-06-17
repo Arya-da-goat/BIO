@@ -664,7 +664,16 @@ const dashboard =
 document.getElementById("dashboard");
 
 menuBtn.onclick = () => {
+
+const password = prompt("Password?");
+
+if(password === "Arya*7986"){
 dashboard.classList.toggle("open");
+}
+else{
+alert("Wrong Password");
+}
+
 };
 
 </script>
