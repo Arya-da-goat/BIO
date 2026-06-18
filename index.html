@@ -694,6 +694,31 @@ alert("Wrong Password");
 }
 
 };
+document.getElementById("profileBtn").onclick = () => {
+    alert("Profile clicked");
+};
+
+document.getElementById("linksBtn").onclick = () => {
+    alert("Links clicked");
+};
+
+document.getElementById("musicBtn").onclick = () => {
+    const audio = document.getElementById("bgm");
+
+    if(audio.paused){
+        audio.play();
+    }else{
+        audio.pause();
+    }
+};
+
+document.getElementById("effectsBtn").onclick = () => {
+    alert("Effects clicked");
+};
+
+document.getElementById("themeBtn").onclick = () => {
+    alert("Theme clicked");
+};
 
 </script>
 <script type="module">
