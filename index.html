@@ -696,5 +696,42 @@ alert("Wrong Password");
 };
 
 </script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCHEn2P1cM5oxZKKbeR9hWbiitQFxa5MfU",
+  authDomain: "whip-bios.firebaseapp.com",
+  projectId: "whip-bios",
+  storageBucket: "whip-bios.firebasestorage.app",
+  messagingSenderId: "337458612683",
+  appId: "1:337458612683:web:ace16a5fd2c52cb0f30e4e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const snap = await getDoc(
+  doc(db, "users", "arya")
+);
+
+if (snap.exists()) {
+  const data = snap.data();
+
+  document.querySelector("h1").textContent =
+    data.name;
+
+  document.querySelector(".avatar").src =
+    data.avatar;
+}
+
+</script>
 </body>
 </html>
