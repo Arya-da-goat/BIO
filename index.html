@@ -695,7 +695,10 @@ alert("Wrong Password");
 
 };
 document.getElementById("profileBtn").onclick = () => {
-    alert("Popup coming soon!");
+    document.getElementById("profilePopup").style.display = "flex";
+};
+document.getElementById("closePopup").onclick = () => {
+    document.getElementById("profilePopup").style.display = "none";
 };
 
 document.getElementById("linksBtn").onclick = () => {
