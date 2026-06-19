@@ -780,8 +780,13 @@ if(newAvatar){
   }, { merge: true });
 }
 
-  document.querySelector("h1").textContent = newName;
-  document.querySelector(".avatar").src = newAvatar;
+if(newName){
+    document.querySelector("h1").textContent = newName;
+}
+
+if(newAvatar){
+    document.querySelector(".avatar").src = newAvatar;
+}
 
   alert("Saved!");
 };
