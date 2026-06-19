@@ -849,8 +849,8 @@ document.getElementById("closePopup").onclick = () => {
     document.getElementById("profilePopup").style.display = "none";
 };
 
-document.getElementById("saveProfile").onclick = () => {
-    alert("Save button clicked");
+document.getElementById("saveProfile").onclick = async () => {
+    await saveProfileToFirebase();
 };
 </script>
 </body>
