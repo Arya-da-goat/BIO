@@ -778,6 +778,24 @@ if (snap.exists()) {
   document.querySelector(".avatar").src =
     data.avatar;
 }
+window.saveProfileToFirebase = async () => {
+
+  const newName =
+    document.getElementById("nameInput").value;
+
+  const newAvatar =
+    document.getElementById("avatarInput").value;
+
+  await setDoc(doc(db, "users", "arya"), {
+    name: newName,
+    avatar: newAvatar
+  });
+
+  document.querySelector("h1").textContent = newName;
+  document.querySelector(".avatar").src = newAvatar;
+
+  alert("Saved!");
+};
 
 </script>
 <div id="profilePopup" style="
