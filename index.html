@@ -768,10 +768,17 @@ window.saveProfileToFirebase = async () => {
   const newAvatar =
     document.getElementById("avatarInput").value;
 
+  if(newName){
   await setDoc(doc(db, "users", "arya"), {
-    name: newName,
+    name: newName
+  }, { merge: true });
+}
+
+if(newAvatar){
+  await setDoc(doc(db, "users", "arya"), {
     avatar: newAvatar
-  });
+  }, { merge: true });
+}
 
   document.querySelector("h1").textContent = newName;
   document.querySelector(".avatar").src = newAvatar;
