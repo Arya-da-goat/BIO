@@ -722,24 +722,6 @@ document.getElementById("effectsBtn").onclick = () => {
 document.getElementById("themeBtn").onclick = () => {
     alert("Theme clicked");
 };
-document.getElementById("saveProfile").onclick = () => {
-
-    const newName =
-    document.getElementById("nameInput").value;
-
-    const newAvatar =
-    document.getElementById("avatarInput").value;
-
-    if(newName){
-        document.querySelector("h1").textContent = newName;
-    }
-
-    if(newAvatar){
-        document.querySelector(".avatar").src = newAvatar;
-    }
-
-    document.getElementById("profilePopup").style.display = "none";
-};
 
 </script>
 <script type="module">
